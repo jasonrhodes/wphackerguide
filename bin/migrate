@@ -1,0 +1,88 @@
+#!/bin/bash
+
+RED="\033[31m"
+BLACK="\033[30m"     
+BLUE="\033[34m"
+GREEN="\033[32m"
+CYAN="\033[36m"
+PURPLE="\033[35m"
+BROWN="\033[33m"
+LIGHTGRAY="\033[37m"
+
+COLOR_RESET="\033[0m"
+
+function usage() {
+    echo -e "${PURPLE}Usage: Migrate your database to a saved state. ${COLOR_RESET}"
+    echo "$ bin/migrate {dbname}"
+    echo ""
+    echo -e "${PURPLE}Or create a new migration file. ${COLOR_RESET}"
+    echo "$ bin/migrate {dbname} create"
+}
+
+function drawline() {
+    echo "========================================================================================"
+}
+
+function success() {
+    echo -e "${CYAN}"
+    drawline
+    echo -e "${GREEN}Great Success! You have the migrate of Official ${1}!!"
+    echo ""
+    echo "Have many celebrations!"
+    echo -e "${CYAN}"
+    drawline
+    echo -e "${COLOR_RESET}"
+}
+
+if [ "$1" == "help" ] || [ $# -lt 1 ]; then
+    usage
+    exit 1
+fi
+
+DB="$1"
+MIGRATIONS_DIR="$(pwd)/database/migrations"
+
+# Make sure the migrations directory exists
+mkdir -p $MIGRATIONS_DIR
+
+if [ "$2" == "create" ]; then
+    echo "Give your migration file a name (lowercase and dashes, no spaces please):"
+    echo -ne "> "
+    read newname
+
+    # get number of files in the migrations directory and add 1
+    count=$(ls -l $MIGRATIONS_DIR | grep ^- | wc -l)
+    num=$(expr $count + 1)
+
+    filename="${num}-${newname}.sql"
+
+    mysqldump -u $DB --password="password" $DB > "${MIGRATIONS_DIR}/${filename}" && echo "You really migrated it that time! ${filename} has been loaded."
+
+    exit 0
+fi
+
+i=0
+for m in "$MIGRATIONS_DIR"/*
+do
+    migrations[i]=$m
+    # echo $m
+    echo "[$i] `basename $m`"
+    i=`expr $i + 1`
+done
+
+echo "Select a migration to run:"
+echo -ne "> "
+read selected
+
+MAXINDEX=`expr ${#migrations[@]} - 1`
+if [[ selected -gt "$MAXINDEX" ]]
+then 
+    echo "Migration $selected doesn't exist. Please try again."
+    exit 1
+fi
+
+MIGRATION="${migrations[$selected]}"
+
+mysql -u $DB --password="password" $DB < "${migrations[$selected]}" && success $(basename $MIGRATION)
+
+exit 0

@@ -1,0 +1,30 @@
+body {
+	background: #000 url('../images/space.jpg') fixed center center no-repeat;
+}
+
+.quote-container {
+	font-family: "Myriad Pro", verdana, sans-serif;
+	font-weight: bold;
+	font-size: 70px;
+	color: #fff;
+	line-height: 74px;
+	width: 1000px;
+	margin: 200px auto 0;
+	position: relative;
+}
+
+.quote-container:before {
+	content: '“';
+	font-size: 600px;
+	font-family: Georgia;
+	color: rgba(255,255,255,0.2);
+	position: absolute;
+	top: 100px;
+	left: -200px;
+}
+
+img.hhg {
+	position: fixed;
+	bottom: 10px;
+	left: 10px;
+}

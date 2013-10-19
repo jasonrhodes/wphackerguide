@@ -1,0 +1,30 @@
+#!/bin/bash -e
+
+echo "===================================================="
+echo "A robot is now installing WordPress for you."
+echo "(Too lazy to click on a couple links, huh?)"
+echo "===================================================="
+echo ""
+
+
+# Download the files (cURL works fine here too)
+wget http://wordpress.org/latest.tar.gz
+
+# Unpack
+tar xfz latest.tar.gz
+
+# Move files out
+mv wordpress/* .
+
+# Remove leftovers
+rm latest.tar.gz && rm -rf wordpress
+
+
+echo "===================================================="
+echo "Oh yay, WordPress is installed. I'm thrilled."
+echo "===================================================="
+echo ""
+
+# TODO:
+# - Create database and user with correct permissions?
+# - Open editor to wp-config.php file for setup?

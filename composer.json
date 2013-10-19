@@ -1,0 +1,12 @@
+{
+    "require": {
+        "slim/slim": "2.1.*",
+        "twig/twig": "1.13.*",
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "app": ""
+        }
+    }
+}
