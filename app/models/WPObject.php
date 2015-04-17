@@ -4,21 +4,20 @@ namespace app\models;
 
 class WPObject {
 
-	use \app\traits\PropertyExtract;
+    use \app\traits\PropertyExtract;
 
-	public $ID;
+    public $ID;
     public $title;
     public $content;
     public $status;
     public $type;
     public $date;
 
-	public function __construct($wp_post_array) {
-
-		$this->extract($wp_post_array, [
-            'key' => function ($k, $v) { 
-                return (substr($k, 0, 5) === "post_") ? substr($k, 5) : $k;
-            }
+    public function __construct($wp_post_array) {
+    	$this->extract($wp_post_array, [
+    		'key' => function ($k, $v) { 
+    			return (substr($k, 0, 5) === "post_") ? substr($k, 5) : $k;
+    		}
         ]);
 
         $this->content = apply_filters('attr_doug', $this->content);
